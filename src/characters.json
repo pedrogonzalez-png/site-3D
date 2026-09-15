@@ -1,0 +1,116 @@
+[
+  {
+    "id": 1,
+    "name": "ARCANE",
+    "color": "#00E5FF",
+    "role": "ENDFIELD"
+  },
+  {
+    "id": 2,
+    "name": "CHEN QIANYU",
+    "color": "#2A82FF",
+    "role": "ENDFIELD"
+  },
+  {
+    "id": 3,
+    "name": "ENDADMINISTRATOR (F)",
+    "color": "#FFD700",
+    "role": "ENDFIELD"
+  },
+  {
+    "id": 4,
+    "name": "ENDADMINISTRATOR (M)",
+    "color": "#FFD700",
+    "role": "ENDFIELD"
+  },
+  {
+    "id": 5,
+    "name": "FLOURITE",
+    "color": "#44FF22",
+    "role": "ENDFIELD"
+  },
+  {
+    "id": 6,
+    "name": "LIINO",
+    "color": "#B030F0",
+    "role": "ENDFIELD"
+  },
+  {
+    "id": 7,
+    "name": "MI FU",
+    "color": "#FF1A66",
+    "role": "ENDFIELD"
+  },
+  {
+    "id": 8,
+    "name": "PERLICA",
+    "color": "#F0F4F8",
+    "role": "ENDFIELD"
+  },
+  {
+    "id": 9,
+    "name": "PURRCHENA",
+    "color": "#FF1A4D",
+    "role": "ENDFIELD"
+  },
+  {
+    "id": 10,
+    "name": "TYPHOEUS",
+    "color": "#C236FF",
+    "role": "ENDFIELD"
+  },
+  {
+    "id": 11,
+    "name": "ALF",
+    "color": "#4A90E2",
+    "role": "SILVER PALACE"
+  },
+  {
+    "id": 12,
+    "name": "ARGOS",
+    "color": "#F5A623",
+    "role": "SILVER PALACE"
+  },
+  {
+    "id": 13,
+    "name": "BENTHAM",
+    "color": "#7ED321",
+    "role": "SILVER PALACE"
+  },
+  {
+    "id": 14,
+    "name": "CAPTAIN KABOOM",
+    "color": "#D0021B",
+    "role": "SILVER PALACE"
+  },
+  {
+    "id": 15,
+    "name": "CINDERELLA",
+    "color": "#BD10E0",
+    "role": "SILVER PALACE"
+  },
+  {
+    "id": 16,
+    "name": "DETECTIVE",
+    "color": "#8B572A",
+    "role": "SILVER PALACE"
+  },
+  {
+    "id": 17,
+    "name": "GRATIA",
+    "color": "#50E3C2",
+    "role": "SILVER PALACE"
+  },
+  {
+    "id": 18,
+    "name": "RED ROSE",
+    "color": "#C0392B",
+    "role": "SILVER PALACE"
+  },
+  {
+    "id": 19,
+    "name": "REX",
+    "color": "#8b202d",
+    "role": "SILVER PALACE"
+  }
+]
