@@ -46,7 +46,7 @@ html {
 }
 
 /* =========================================
-   MENU ESQUERDO (ROLETA DE CARTAS)
+   MENU ESQUERDO (ROLETA / ARCO DE CARTAS)
    ========================================= */
 .character-area {
   flex: 0 0 18%;
@@ -57,6 +57,7 @@ html {
   padding-left: 0;
   position: relative;
   z-index: 10;
+  user-select: none;
 }
 
 .arch-container {
@@ -74,45 +75,55 @@ html {
   left: 0;
   display: flex;
   gap: 12px;
-  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
+/* CARTAS */
 .char-slot {
   width: 230px;
   height: 240px;
   background-color: var(--surface);
   background-size: cover;
-  background-position: center;
+  background-position: center top;
   background-repeat: no-repeat;
   border: 2px solid var(--border);
   transform: skew(-15deg);
   cursor: pointer;
-  transition: transform 0.2s, border-color 0.2s;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.5);
   overflow: hidden;
+  box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.5);
+  transition:
+    transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    filter 0.3s ease;
+  filter: brightness(0.5) grayscale(40%);
 }
 
 .char-slot:hover {
   border-color: #666;
-  transform: skew(-15deg) scale(1.05);
+  transform: skew(-15deg) scale(1.05) translateX(10px);
+  filter: brightness(0.8) grayscale(10%);
   z-index: 5;
 }
 
 .char-slot.active {
   border-color: #FFCC00;
-  box-shadow: 0 0 12px rgba(255, 204, 0, 0.6);
+  transform: skew(-15deg) scale(1.1) translateX(15px);
+  box-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
+  filter: brightness(1) grayscale(0%);
   z-index: 6;
 }
 
 .char-number {
+  position: absolute;
+  bottom: 5px;
+  right: 15px;
   transform: skew(15deg);
   color: #fff;
   font-weight: bold;
-  font-size: clamp(1.4rem, 2vw, 2.5rem);
-  opacity: 0.3;
+  font-size: 1.2rem;
+  opacity: 0.8;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
 }
 
 /* =========================================
@@ -148,13 +159,11 @@ html {
   font-weight: 900;
   font-style: normal;
   white-space: nowrap;
-  background: repeating-linear-gradient(
-    45deg,
-    rgba(255, 255, 255, 0.258),
-    rgba(255, 255, 255, 0.643) 5px,
-    transparent 1px,
-    transparent 10px
-  );
+  background: repeating-linear-gradient(45deg,
+      rgba(255, 255, 255, 0.258),
+      rgba(255, 255, 255, 0.643) 5px,
+      transparent 1px,
+      transparent 10px);
   -webkit-background-clip: text;
   color: transparent;
   z-index: 1;
@@ -282,7 +291,7 @@ html {
 }
 
 /* =========================================
-   LINHA DECORATIVA INFERIOR
+   LINHA DECORATIVA INFERIOR (TECH LINE)
    ========================================= */
 .character-render-container::before {
   content: "";

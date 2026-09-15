@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import charactersData from "./characters.json";
 import { ALL_CHARACTERS } from "./charactersData";
 
 const generateRows = (charactersList) => {
@@ -11,7 +10,7 @@ const generateRows = (charactersList) => {
       cols: charactersList.slice(i, i + 3),
     });
   }
-  return rows; 
+  return rows;
 };
 
 const initialRows = generateRows(ALL_CHARACTERS);
@@ -22,10 +21,10 @@ function App() {
   const [rows, setRows] = useState(initialRows);
   const [showIdleVideo, setShowIdleVideo] = useState(false);
 
-  const selectedCharacter = ALL_CHARACTERS.find((char) => char.id === selectedId);
-  const charExtraInfo = charactersData.find((char) => char.id === selectedId + 1) || {};
-  const currentColor = charExtraInfo.color || "#FFCC00";
-
+  // Agora puxa TUDO do selectedCharacter (nome, avatar, cor, role, etc)
+  const selectedCharacter =
+    ALL_CHARACTERS.find((char) => char.id === selectedId) || ALL_CHARACTERS[0];
+  const currentColor = selectedCharacter.color || "#FFCC00";
   useEffect(() => {
     setShowIdleVideo(false);
   }, [selectedId]);
@@ -50,37 +49,43 @@ function App() {
     }
   };
 
-// ==========================================
-  // CONFIGURAÇÃO: ARCO VERTICAL (Igual à sua linha)
-  // ==========================================
-  const VISIBLE_COUNT = 10; 
-  const RADIUS = 650;        // Define o tamanho da curva (mantido o que você gostou)
-  const CENTER_X = -600;     // Joga o centro do círculo lá para fora da tela (esquerda)
-  const CENTER_Y = 570;      // Posição Y da carta central (aumente para descer a fileira inteira)
+  // Ajustes do Arco Vertical
+  const VISIBLE_COUNT = 10;
+  const RADIUS = 650;
+  const CENTER_X = -500;
+  const CENTER_Y = 450;
 
   return (
     <main className="layout-container" style={{ "--accent": currentColor }}>
-      <section className="character-area" onWheel={handleScroll} aria-label="Seletor de Personagens">
+      <section
+        className="character-area"
+        onWheel={handleScroll}
+        aria-label="Seletor de Personagens"
+      >
         <div className="arch-container">
           {rows.slice(0, VISIBLE_COUNT).map((row, index) => {
             const offset = index - Math.floor(VISIBLE_COUNT / 2);
-            
-            // Multiplicador 13 mantém a distância ideal entre as cartas na curva
-            const angleDeg = offset * 13; 
+            const angleDeg = offset * 13;
             const angleRad = angleDeg * (Math.PI / 180);
-            
+
             const x = CENTER_X + Math.cos(angleRad) * RADIUS;
-        
             const y = CENTER_Y + Math.sin(angleRad) * RADIUS;
 
             return (
-              <div key={row.id} className="arch-row" style={{ transform: `translate(${x}px, ${y}px)` }}>
+              <div
+                key={row.id}
+                className="arch-row"
+                style={{ transform: `translate(${x}px, ${y}px)` }}
+              >
                 {row.cols.map((char) => (
                   <div
                     key={char.id}
                     role="button"
                     tabIndex={0}
                     className={`char-slot ${selectedId === char.id ? "active" : ""}`}
+                    style={{
+                      backgroundImage: `url(${char.avatar || char.image || "https://via.placeholder.com/230x240?text=Sem+Foto"})`,
+                    }}
                     onClick={() => setSelectedId(char.id)}
                     onKeyDown={(e) => handleKeyDown(e, char.id)}
                     aria-label={`Selecionar personagem ${char.name || char.id + 1}`}
@@ -94,9 +99,14 @@ function App() {
           })}
         </div>
       </section>
+
       <section className="right-panel" aria-label="Detalhes do Personagem">
         <div className="search-container">
-          <input type="search" className="search-input" placeholder="Pesquisar personagem..." />
+          <input
+            type="search"
+            className="search-input"
+            placeholder="Pesquisar personagem..."
+          />
         </div>
 
         <div className="character-name-tag">{selectedCharacter?.name}</div>
@@ -114,7 +124,7 @@ function App() {
               muted
               playsInline
               onEnded={() => setShowIdleVideo(true)}
-              className="character-video" 
+              className="character-video"
             />
           ) : (
             <video
