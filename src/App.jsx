@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import "./App.css";
 import { ALL_CHARACTERS } from "./charactersData";
 
 const generateRows = (charactersList) => {
   const rows = [];
-  for (let i = 0; i < charactersList.length; i += 3) {
+  // Agrupa de 2 em 2 colunas no arco (estilo Marvel Rivals)
+  for (let i = 0; i < charactersList.length; i += 2) {
     rows.push({
-      id: i / 3,
-      cols: charactersList.slice(i, i + 3),
+      id: i / 2,
+      cols: charactersList.slice(i, i + 2),
     });
   }
   return rows;
@@ -20,11 +21,16 @@ function App() {
   const [selectedId, setSelectedId] = useState(0);
   const [rows, setRows] = useState(initialRows);
   const [showIdleVideo, setShowIdleVideo] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  // Agora puxa TUDO do selectedCharacter (nome, avatar, cor, role, etc)
-  const selectedCharacter =
-    ALL_CHARACTERS.find((char) => char.id === selectedId) || ALL_CHARACTERS[0];
+  const selectedCharacter = useMemo(
+    () =>
+      ALL_CHARACTERS.find((char) => char.id === selectedId) ||
+      ALL_CHARACTERS[0],
+    [selectedId],
+  );
   const currentColor = selectedCharacter.color || "#FFCC00";
+
   useEffect(() => {
     setShowIdleVideo(false);
   }, [selectedId]);
@@ -49,70 +55,85 @@ function App() {
     }
   };
 
-  // Ajustes do Arco Vertical
+  // Geometria do Arco (Marvel Rivals)
   const VISIBLE_COUNT = 10;
-  const RADIUS = 650;
-  const CENTER_X = -500;
-  const CENTER_Y = 450;
+  const RADIUS = 450;
+  const START_ANGLE = -47;
+  const STEP_ANGLE = 11;
 
   return (
     <main className="layout-container" style={{ "--accent": currentColor }}>
+      {/* MENU ESQUERDO (ROLETA EM ARCO) */}
       <section
         className="character-area"
         onWheel={handleScroll}
         aria-label="Seletor de Personagens"
       >
+        {/* Trilhos curvos no fundo */}
+        <div className="arc-tracks-bg" />
+
         <div className="arch-container">
           {rows.slice(0, VISIBLE_COUNT).map((row, index) => {
-            const offset = index - Math.floor(VISIBLE_COUNT / 2);
-            const angleDeg = offset * 13;
-            const angleRad = angleDeg * (Math.PI / 180);
-
-            const x = CENTER_X + Math.cos(angleRad) * RADIUS;
-            const y = CENTER_Y + Math.sin(angleRad) * RADIUS;
+            const angleDeg = START_ANGLE + index * STEP_ANGLE;
 
             return (
               <div
                 key={row.id}
                 className="arch-row"
-                style={{ transform: `translate(${x}px, ${y}px)` }}
+                style={{
+                  transform: `rotate(${angleDeg}deg) translateX(${RADIUS}px)`,
+                }}
               >
-                {row.cols.map((char) => (
-                  <div
-                    key={char.id}
-                    role="button"
-                    tabIndex={0}
-                    className={`char-slot ${selectedId === char.id ? "active" : ""}`}
-                    style={{
-                      backgroundImage: `url(${char.avatar || char.image || "https://via.placeholder.com/230x240?text=Sem+Foto"})`,
-                    }}
-                    onClick={() => setSelectedId(char.id)}
-                    onKeyDown={(e) => handleKeyDown(e, char.id)}
-                    aria-label={`Selecionar personagem ${char.name || char.id + 1}`}
-                    aria-pressed={selectedId === char.id}
-                  >
-                    <span className="char-number">{char.id + 1}</span>
-                  </div>
-                ))}
+                {row.cols.map((char) => {
+                  const isMatch =
+                    searchTerm === "" ||
+                    char.name.toLowerCase().includes(searchTerm.toLowerCase());
+                  return (
+                    <div
+                      key={char.id}
+                      role="button"
+                      tabIndex={0}
+                      className={`char-slot ${selectedId === char.id ? "active" : ""} ${!isMatch ? "dimmed" : ""}`}
+                      onClick={() => setSelectedId(char.id)}
+                      onKeyDown={(e) => handleKeyDown(e, char.id)}
+                      aria-label={`Selecionar personagem ${char.name}`}
+                      aria-pressed={selectedId === char.id}
+                    >
+                      <img
+                        src={char.avatar}
+                        alt={char.name}
+                        className="char-avatar-img"
+                      />
+                      <span className="char-number">{char.id + 1}</span>
+                    </div>
+                  );
+                })}
               </div>
             );
           })}
         </div>
       </section>
 
-      <section className="right-panel" aria-label="Detalhes do Personagem">
+      {/* PAINEL DIREITO (RENDER E HUD) */}
+      <section
+        className="right-panel"
+        data-role={selectedCharacter?.role}
+        aria-label="Detalhes do Personagem"
+      >
         <div className="search-container">
           <input
             type="search"
             className="search-input"
-            placeholder="Pesquisar personagem..."
+            placeholder="PESQUISAR..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
         <div className="character-name-tag">{selectedCharacter?.name}</div>
 
         <div className="background-game-title" aria-hidden="true">
-          {selectedCharacter?.game}
+          {selectedCharacter?.role}
         </div>
 
         <div className="character-render-container">
@@ -141,7 +162,7 @@ function App() {
 
         <div className="top-info-bar">
           <span className="top-char-name">
-            {charExtraInfo.role || selectedCharacter?.game || "ARCANE"}
+            {selectedCharacter?.role || "ENDFIELD"}
           </span>
           <span className="top-counter">
             {String(selectedId + 1).padStart(2, "0")} / {TOTAL_CHARACTERS}
