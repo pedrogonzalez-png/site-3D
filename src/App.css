@@ -653,3 +653,237 @@ input {
 @media (prefers-reduced-motion: reduce) {
   .mobile-character-strip .char-slot { transition: none; }
 }
+
+/* Refinamento mobile: hero em tela cheia e personagens embaixo. */
+@media (max-width: 1100px) {
+  .layout-container {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    background: var(--bg-deep);
+  }
+
+  .right-panel {
+    order: 1;
+    flex: 1 1 0;
+    min-height: 0;
+    border: 0;
+    background: radial-gradient(ellipse at 50% 58%, color-mix(in srgb, var(--accent) 10%, #101820), #0b0d12 76%);
+  }
+
+  .right-panel::before {
+    top: 25%;
+    left: 15%;
+    width: 70%;
+    height: 55%;
+    opacity: .2;
+    filter: blur(90px);
+  }
+
+  .right-panel[data-role="SiLVER PALACE"]::before {
+    left: 15%;
+    width: 70%;
+  }
+
+  .character-area {
+    order: 2;
+    flex: 0 0 auto;
+    height: clamp(130px, 19dvh, 164px);
+    min-height: 112px;
+    z-index: 15;
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, .12);
+    background: linear-gradient(180deg, #171b24, #0b0c10 92%);
+    box-shadow: 0 -16px 36px rgba(0, 0, 0, .24);
+  }
+
+  .character-area::before {
+    content: "PERSONAGENS  /  DESLIZE PARA ESCOLHER";
+    position: absolute;
+    top: 8px;
+    left: 16px;
+    z-index: 2;
+    color: rgba(255, 255, 255, .56);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    pointer-events: none;
+  }
+
+  .mobile-character-strip {
+    height: 100%;
+    padding-top: 28px;
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+    scrollbar-width: none;
+  }
+
+  .mobile-character-strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-character-strip .char-slot {
+    width: clamp(85px, 14vw, 115px);
+    height: 100%;
+    max-height: none;
+    border-radius: 8px;
+    background: #202631;
+    box-shadow: 0 7px 20px rgba(0, 0, 0, .3);
+  }
+
+  .mobile-character-strip .char-slot.active {
+    box-shadow: 0 0 0 1px var(--accent), 0 0 18px color-mix(in srgb, var(--accent) 42%, transparent);
+    transform: translateY(-2px);
+  }
+
+  .character-render-container {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: none;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .character-video,
+  .character-fallback {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    object-fit: cover;
+    object-position: center center;
+    transform: none;
+    filter: drop-shadow(0 18px 32px rgba(0, 0, 0, .4));
+  }
+
+  .right-panel::after {
+    height: 48%;
+    background: linear-gradient(to top, rgba(7, 9, 14, .72), transparent);
+  }
+
+  .background-game-title {
+    top: 53%;
+    width: 100%;
+    overflow: hidden;
+    font-size: clamp(3rem, 12vw, 8rem);
+    letter-spacing: -.03em;
+    opacity: .4;
+  }
+
+  .right-panel[data-role="SiLVER PALACE"] .background-game-title {
+    font-size: clamp(2rem, 8vw, 5rem);
+  }
+
+  .character-name-tag {
+    top: 72px;
+    left: 20px;
+    width: max-content;
+    max-width: calc(100% - 40px);
+    padding: 5px 0 5px 14px;
+    font-size: clamp(1.75rem, 6vw, 3rem);
+    line-height: 1.1;
+  }
+
+  .top-info-bar {
+    top: 18px;
+    left: 20px;
+    gap: 10px;
+  }
+
+  .search-container {
+    top: 13px;
+    right: 20px;
+    width: min(205px, 42vw);
+  }
+}
+
+@media (max-width: 700px) {
+  .character-area {
+    height: clamp(124px, 17dvh, 152px);
+    min-height: 116px;
+  }
+
+  .mobile-character-strip {
+    gap: 9px;
+  }
+
+  .mobile-character-strip .char-slot {
+    width: clamp(80px, 22vw, 101px);
+  }
+
+  .character-name-tag {
+    top: 78px;
+    left: 16px;
+    max-width: calc(100% - 32px);
+    border-left-width: 4px;
+    font-size: clamp(1.6rem, 7vw, 2.4rem);
+  }
+
+  .top-info-bar {
+    top: 16px;
+    left: 16px;
+  }
+
+  .search-container {
+    top: 12px;
+    right: 16px;
+    width: min(166px, 43vw);
+  }
+
+  .background-game-title {
+    top: 54%;
+    font-size: clamp(2.8rem, 16vw, 5.5rem);
+  }
+
+  .right-panel[data-role="SiLVER PALACE"] .background-game-title {
+    font-size: clamp(2.3rem, 9.5vw, 4.2rem);
+  }
+}
+
+@media (max-width: 380px) {
+  .top-char-name {
+    display: none;
+  }
+
+  .search-container {
+    width: 145px;
+  }
+
+  .character-name-tag {
+    font-size: clamp(1.4rem, 7vw, 1.8rem);
+  }
+}
+
+@media (max-width: 1100px) and (max-height: 500px) {
+  .character-area {
+    height: 104px;
+    min-height: 104px;
+  }
+
+  .character-area::before {
+    top: 5px;
+  }
+
+  .mobile-character-strip {
+    padding-top: 22px;
+    padding-bottom: 5px;
+  }
+
+  .mobile-character-strip .char-slot {
+    width: 74px;
+  }
+
+  .character-name-tag {
+    top: 43px;
+    font-size: clamp(1.1rem, 4vh, 1.5rem);
+  }
+
+  .top-info-bar {
+    top: 8px;
+  }
+
+  .search-container {
+    top: 6px;
+  }
+}
