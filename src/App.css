@@ -9,7 +9,6 @@
   --accent: #ffcc00;
   --text: #f8f9fa;
   --text-muted: #8e94a0;
-
   --hud-top: clamp(16px, 3vh, 40px);
 }
 
@@ -19,15 +18,26 @@
   box-sizing: border-box;
 }
 
+html,
 body,
-html {
+#root {
   margin: 0;
   padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+html,
+body {
   background-color: var(--bg-deep);
   color: var(--text);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   overflow: hidden;
-  height: 100%;
+}
+
+button,
+input {
+  font: inherit;
 }
 
 .layout-container {
@@ -35,6 +45,7 @@ html {
   width: 100vw;
   height: 100dvh;
   position: relative;
+  overflow: hidden;
 }
 
 /* =========================================
@@ -43,23 +54,30 @@ html {
 .character-area {
   flex: 0 0 30%;
   width: 30%;
-  height: 100vh;
+  height: 100%;
   position: relative;
   overflow: hidden;
   z-index: 10;
   user-select: none;
+  touch-action: pan-y;
 }
 
-/* Trilhos táticos em anel no fundo */
 .arc-tracks-bg {
   position: absolute;
   top: 50%;
   left: -395px;
   width: 1380px;
   height: 1380px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 90px rgba(255, 255, 255, 0.012),
+    0 0 0 180px rgba(255, 255, 255, 0.009),
+    0 0 0 270px rgba(255, 255, 255, 0.006);
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 
-/* Pivot de rotação */
 .arch-container {
   position: absolute;
   top: 50%;
@@ -76,21 +94,32 @@ html {
   gap: 12px;
   transform-origin: 0 0;
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
 }
 
 /* CARD INDIVIDUAL DO PERSONAGEM */
 .char-slot {
   width: 155px;
   height: 160px;
+  margin: 0;
+  padding: 0;
   background-color: var(--surface);
   border: 2px solid var(--border);
   border-radius: 6px;
   position: relative;
   cursor: pointer;
   overflow: hidden;
+  appearance: none;
+  -webkit-appearance: none;
   transform: perspective(400px) rotateY(-12deg) skewY(-2deg);
-  transition: all 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    filter 0.25s ease,
+    opacity 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
   filter: brightness(0.6) grayscale(30%);
+  color: inherit;
 }
 
 .char-slot:hover {
@@ -98,6 +127,12 @@ html {
   transform: perspective(400px) rotateY(-4deg) scale(1.08);
   filter: brightness(0.9) grayscale(0%);
   z-index: 10;
+}
+
+.char-slot:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+  z-index: 20;
 }
 
 .char-slot.active {
@@ -118,6 +153,7 @@ html {
   height: 100%;
   object-fit: cover;
   display: block;
+  pointer-events: none;
 }
 
 .char-number {
@@ -131,39 +167,40 @@ html {
   padding: 1px 6px;
   border-radius: 3px;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
 }
 
 /* =========================================
    PAINEL DIREITO E RENDER
    ========================================= */
 .right-panel {
-  flex: 0 0 72%;
-  width: 72%;
+  flex: 0 0 70%;
+  width: 70%;
   background-color: var(--bg-panel);
   position: relative;
   overflow: hidden;
   border-left: 1px solid rgba(255, 255, 255, 0.08);
+  isolation: isolate;
 }
 
-/* FAIXA RETANGULAR PADRÃO (ENDFIELD) */
 .right-panel::before {
   content: "";
   position: absolute;
   top: 0;
   left: 32%;
   width: 35%;
-  height: 100vh;
+  height: 100%;
   background-color: var(--accent);
   opacity: 0.25;
   filter: blur(80px);
   z-index: 0;
   transition: left 0.35s ease, background-color 0.4s ease;
+  pointer-events: none;
 }
 
-/* FAIXA RETANGULAR ESPECÍFICA (SILVER PALACE) */
-.right-panel[data-role="SILVER PALACE"]::before {
+/* Os dados usam "SiLVER PALACE", por isso o seletor respeita exatamente esse valor. */
+.right-panel[data-role="SiLVER PALACE"]::before {
   left: 48%;
-  /* Desloca o retângulo mais para a direita para alinhar com o Silver Palace */
 }
 
 .background-game-title {
@@ -172,15 +209,17 @@ html {
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: clamp(6rem, 14vw, 22rem);
-  /* Tamanho padrão (ENDFIELD) */
   font-weight: 900;
   white-space: nowrap;
-  background: repeating-linear-gradient(45deg,
-      rgba(255, 255, 255, 0.08),
-      rgba(255, 255, 255, 0.3) 5px,
-      transparent 1px,
-      transparent 10px);
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.3) 5px,
+    transparent 5px,
+    transparent 10px
+  );
   -webkit-background-clip: text;
+  background-clip: text;
   color: transparent;
   z-index: 1;
   pointer-events: none;
@@ -202,15 +241,21 @@ html {
   align-items: flex-end;
 }
 
-.character-video {
+.character-video,
+.character-fallback {
   max-height: 100%;
   width: auto;
   max-width: 100%;
   object-fit: contain;
   object-position: bottom center;
   filter: drop-shadow(0px 10px 25px rgba(0, 0, 0, 0.8));
-  transform: scale(1.2);
+  transform: scale(var(--char-scale, 1.2));
   transform-origin: bottom center;
+  display: block;
+}
+
+.character-fallback {
+  height: 100%;
 }
 
 .right-panel::after {
@@ -229,7 +274,7 @@ html {
 .search-container {
   position: absolute;
   top: var(--hud-top);
-  right: 100px;
+  right: clamp(20px, 5vw, 100px);
   z-index: 20;
   width: min(240px, 30vw);
 }
@@ -245,7 +290,18 @@ html {
   font-size: 0.85rem;
   letter-spacing: 1px;
   backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
 
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.search-input:focus {
+  border-color: rgba(255, 255, 255, 0.4);
+  border-bottom-color: var(--accent, #ffcc00);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--accent, #ffcc00) 25%, transparent);
 }
 
 .character-name-tag {
@@ -261,6 +317,7 @@ html {
   color: #fff;
   text-shadow: 0px 4px 20px rgba(0, 0, 0, 0.9);
   line-height: 1;
+  transition: border-color 0.3s ease;
 }
 
 .top-info-bar {
@@ -286,11 +343,11 @@ html {
   font-weight: 800;
   font-size: 1.1rem;
 }
+
 /* =========================================
    RESPONSIVIDADE ULTRAWIDE (3440x1440)
    ========================================= */
 @media (min-width: 2800px) and (min-aspect-ratio: 21/9) {
-  /* Ajuste do Menu Esquerdo (traz o arco para dentro da tela) */
   .character-area {
     flex: 0 0 25%;
     width: 25%;
@@ -298,7 +355,7 @@ html {
 
   .arc-tracks-bg,
   .arch-container {
-    left: -280px; /* Traz o centro da roleta mais para a direita */
+    left: -280px;
   }
 
   .char-slot {
@@ -306,50 +363,142 @@ html {
     height: 175px;
   }
 
-  /* Painel Direito */
   .right-panel {
     flex: 0 0 75%;
     width: 75%;
   }
 
-  /* Ajuste das Faiixas de Luz (Luz de Fundo) */
   .right-panel::before {
     left: 36%;
     width: 28%;
   }
 
-  .right-panel[data-role="SILVER PALACE"]::before {
+  .right-panel[data-role="SiLVER PALACE"]::before {
     left: 52%;
     width: 26%;
   }
 
-  /* Texto de Fundo (Game Title) */
   .background-game-title {
     font-size: clamp(5rem, 9vw, 14rem);
   }
 
-/* AJUSTE DO TÍTULO DE FUNDO PARA O SILVER PALACE */
-.right-panel[data-role="SILVER PALACE"] .background-game-title {
-  font-size: clamp(2rem, 5.2vw, 7.5rem); /* Tamanho reduzido para caber a frase inteira */
-  letter-spacing: -1px;                  /* Espaçamento mais compacto */
-  max-width: 90%;                        /* Evita estourar a largura do painel */
-  text-align: center;
-}
-
-  /* Ajuste de Escala dos Vídeos no Ultrawide */
-  .character-video {
-    transform: scale(1.08);
-  }
-
-@media (min-width: 2800px) and (min-aspect-ratio: 21/9) {
-  .right-panel[data-role="SILVER PALACE"] .background-game-title {
+  .right-panel[data-role="SiLVER PALACE"] .background-game-title {
     font-size: clamp(5rem, 4.2vw, 7.8rem);
+    letter-spacing: -1px;
+    max-width: 90%;
+    text-align: center;
+    white-space: nowrap;
   }
-}
 
-  /* HUD */
+  .character-video,
+  .character-fallback {
+    transform: scale(var(--char-scale, 1.08));
+  }
+
   .character-name-tag {
     font-size: 3.5rem;
     left: 40px;
+  }
+}
+
+/* =========================================
+   TELAS MENORES
+   ========================================= */
+@media (max-width: 1000px) {
+  .character-area {
+    flex-basis: 34%;
+    width: 34%;
+  }
+
+  .right-panel {
+    flex-basis: 66%;
+    width: 66%;
+  }
+
+  .char-slot {
+    width: 130px;
+    height: 135px;
+  }
+
+  .arch-container {
+    left: -340px;
+  }
+
+  .arc-tracks-bg {
+    left: -340px;
+    width: 1200px;
+    height: 1200px;
+  }
+
+  .character-name-tag {
+    left: 20px;
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+
+  .top-info-bar {
+    left: 20px;
+  }
+}
+
+@media (max-width: 700px) {
+  .layout-container {
+    flex-direction: column;
+  }
+
+  .character-area {
+    flex: 0 0 32%;
+    width: 100%;
+    height: 32%;
+  }
+
+  .right-panel {
+    flex: 1 1 68%;
+    width: 100%;
+    height: 68%;
+  }
+
+  .arch-container {
+    top: 40%;
+    left: -70px;
+    transform: scale(0.65);
+    transform-origin: left center;
+  }
+
+  .arc-tracks-bg {
+    top: 40%;
+    left: -90px;
+    width: 850px;
+    height: 850px;
+  }
+
+  .character-render-container {
+    height: 100%;
+  }
+
+  .character-name-tag {
+    top: 58px;
+    left: 18px;
+    font-size: clamp(1.8rem, 8vw, 2.6rem);
+  }
+
+  .top-info-bar {
+    top: 16px;
+    left: 18px;
+  }
+
+  .search-container {
+    top: 16px;
+    right: 18px;
+    width: min(190px, 42vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arch-row,
+  .char-slot,
+  .search-input,
+  .character-name-tag,
+  .right-panel::before {
+    transition: none;
   }
 }

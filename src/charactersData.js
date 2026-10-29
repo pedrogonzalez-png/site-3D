@@ -1,20 +1,31 @@
 // =========================================================
-// IMAGENS (AVATARES)
+// iMG ENDFiELD
 // =========================================================
-import arcaneImg from "./assets/img-end/arcane.png";
-import chenImg from "./assets/img-end/chenqianyu.png";
-// import endfImg from "./assets/img-end/endadministrator_f.png";
-// import endmImg from "./assets/img-end/endadministrator_m.png";
-// import flouriteImg from "./assets/img-end/flourite.png";
-// import liinoImg from "./assets/img-end/liino.png";
-// import miImg from "./assets/img-end/mifu.png";
-// import perlicaImg from "./assets/img-end/perlica.png";
-// import purrchenaImg from "./assets/img-end/purrchena.png";
-// import typhoeusImg from "./assets/img-end/typhoeus.png";
-// import silverImg from "./assets/img-silver/img-silver.png";
+import arcaneimg from "./assets/img-end/arcane.png";
+import chenimg from "./assets/img-end/chenqianyu.png";
+import endmimg from "./assets/img-end/endministrator.png";
+import flouriteimg from "./assets/img-end/fluorite.png";
+import liinoimg from "./assets/img-end/liino.png";
+import miimg from "./assets/img-end/mifu.png";
+import perlicaimg from "./assets/img-end/perlica.png";
+import purrchenaimg from "./assets/img-end/purrchena.png";
+import typhoeusimg from "./assets/img-end/typhoeus.png";
 
 // =========================================================
-// VÍDEOS ENDFIELD
+// iMG SiLVER
+// =========================================================
+import alfimg from "./assets/img-silver/alf.png";
+import argosimg from "./assets/img-silver/argos.png";
+import benthamimg from "./assets/img-silver/bentham.png";
+import captainkaboomimg from "./assets/img-silver/captainkaboom.png";
+import cinderellaimg from "./assets/img-silver/cinderella.png";
+import detectiveimg from "./assets/img-silver/detective.png";
+import gratiaimg from "./assets/img-silver/gratia.png";
+import redroseimg from "./assets/img-silver/redrose.png";
+import reximg from "./assets/img-silver/rex.png";
+
+// =========================================================
+// VÍDEOS ENDFiELD
 // =========================================================
 import arcaneG from "./assets/videos/endfield/arcaneG_transparente.webm";
 import arcaneR from "./assets/videos/endfield/arcaneR_transparente.webm";
@@ -36,7 +47,7 @@ import typhoeusG from "./assets/videos/endfield/typhoeusG_transparente.webm";
 import typhoeusR from "./assets/videos/endfield/typhoeusR_transparente.webm";
 
 // =========================================================
-// VÍDEOS SILVER PALACE
+// VÍDEOS SiLVER PALACE
 // =========================================================
 import alfG from "./assets/videos/silver/alfG_transparente.webm";
 import alfR from "./assets/videos/silver/alfR_transparente.webm";
@@ -61,163 +72,163 @@ export const ALL_CHARACTERS = [
   {
     id: 0,
     name: "ARCANE",
-    avatar: arcaneImg,
+    avatar: arcaneimg,
     videoIntro: arcaneG,
     videoIdle: arcaneR,
     color: "#00E5FF",
-    role: "ENDFIELD",
+    role: "ENDFiELD",
   },
   {
     id: 1,
-    name: "CHEN QIANYU",
-    avatar: chenImg,
+    name: "CHEN QiANYU",
+    avatar: chenimg,
     videoIntro: chenG,
     videoIdle: chenR,
     color: "#2A82FF",
-    role: "ENDFIELD",
+    role: "ENDFiELD",
   },
   {
     id: 2,
-    name: "ENDADMINISTRATOR",
-    // avatar: endmImg,
+    name: "ENDADMiNiSTRATOR",
+    avatar: endmimg,
     videoIntro: endfG,
-    videoIdle: endfR,
+    videoIdle: endfR, 
     color: "#FFD700",
-    role: "ENDFIELD",
+    role: "ENDFiELD",
   },
   {
     id: 3,
-    name: "FLOURITE",
-    // avatar: flouriteImg,
+    name: "FLOURiTE",
+    avatar: flouriteimg,
     videoIntro: flouriteG,
     videoIdle: flouriteR,
     color: "#44FF22",
-    role: "ENDFIELD",
+    role: "ENDFiELD",
   },
   {
     id: 4,
-    name: "LIINO",
-    // avatar: liinoImg,
+    name: "LiiNO",
+    avatar: liinoimg,
     videoIntro: liinoG,
     videoIdle: liinoR,
     color: "#B030F0",
-    role: "ENDFIELD",
+    role: "ENDFiELD",
   },
   {
     id: 5,
-    name: "MI FU",
-    // avatar: miImg,
+    name: "Mi FU",
+    avatar: miimg,
     videoIntro: miG,
     videoIdle: miR,
     color: "#FF1A66",
-    role: "ENDFIELD",
+    role: "ENDFiELD",
   },
   {
     id: 6,
-    name: "PERLICA",
-    // avatar: perlicaImg,
+    name: "PERLiCA",
+    avatar: perlicaimg,
     videoIntro: perlicaG,
     videoIdle: perlicaR,
     color: "#F0F4F8",
-    role: "ENDFIELD",
+    role: "ENDFiELD",
   },
   {
     id: 7,
     name: "PURRCHENA",
-    // avatar: purrchenaImg,
+    avatar: purrchenaimg,
     videoIntro: purrchenaG,
     videoIdle: purrchenaR,
     color: "#FF1A4D",
-    role: "ENDFIELD",
+    role: "ENDFiELD",
   },
   {
     id: 8,
     name: "TYPHOEUS",
-    // avatar: typhoeusImg,
+    avatar: typhoeusimg,
     videoIntro: typhoeusG,
     videoIdle: typhoeusR,
     color: "#C236FF",
-    role: "ENDFIELD",
+    role: "ENDFiELD",
   },
 {
     id: 9,
     name: "ALF",
-    // avatar: silverImg,
+    avatar: alfimg,
     videoIntro: alfG,
     videoIdle: alfR,
     color: "#FF5E7E",
-    role: "SILVER PALACE",
+    role: "SiLVER PALACE",
   },
   {
     id: 10,
     name: "ARGOS",
-    // avatar: silverImg,
+    avatar: argosimg,
     videoIntro: argosG,
     videoIdle: argosR,
     color: "#00D9F6",
-    role: "SILVER PALACE",
+    role: "SiLVER PALACE",
   },
   {
     id: 11,
     name: "BENTHAM",
-    // avatar: silverImg,
+    avatar: benthamimg,
     videoIntro: benthamG,
     videoIdle: benthamR,
     color: "#E030FF",
-    role: "SILVER PALACE",
+    role: "SiLVER PALACE",
   },
   {
     id: 12,
-    name: "CAPTAIN KABOOM",
-    // avatar: silverImg,
+    name: "CAPTAiN KABOOM",
+    avatar: captainkaboomimg,
     videoIntro: captainkaboomG,
     videoIdle: captainkaboomR,
     color: "#00FF99",
-    role: "SILVER PALACE",
+    role: "SiLVER PALACE",
   },
   {
     id: 13,
-    name: "CINDERELLA",
-    // avatar: silverImg,
+    name: "CiNDERELLA",
+    avatar: cinderellaimg,
     videoIntro: cinderellaG,
     videoIdle: cinderellaR,
     color: "#FF9900",
-    role: "SILVER PALACE",
+    role: "SiLVER PALACE",
   },
   {
     id: 14,
-    name: "DETECTIVE",
-    // avatar: silverImg,
+    name: "DETECTiVE",
+    avatar: detectiveimg,
     videoIntro: detectiveG,
     videoIdle: detectiveR,
     color: "#8A2BE2",
-    role: "SILVER PALACE",
+    role: "SiLVER PALACE",
   },
   {
     id: 15,
-    name: "GRATIA",
-    // avatar: silverImg,
+    name: "GRATiA",
+    avatar: gratiaimg,
     videoIntro: gratiaG,
     videoIdle: gratiaR,
     color: "#EAA8FF",
-    role: "SILVER PALACE",
+    role: "SiLVER PALACE",
   },
   {
     id: 16,
     name: "RED ROSE",
-    // avatar: silverImg,
+    avatar: redroseimg,
     videoIntro: redroseG,
     videoIdle: redroseR,
     color: "#FF0033",
-    role: "SILVER PALACE",
+    role: "SiLVER PALACE",
   },
   {
     id: 17,
     name: "REX",
-    // avatar: silverImg,
+    avatar: reximg,
     videoIntro: rexG,
     videoIdle: rexR,
     color: "#FF2400",
-    role: "SILVER PALACE",
+    role: "SiLVER PALACE",
   },
 ]
