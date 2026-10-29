@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import "./App.css";
 import { ALL_CHARACTERS } from "./charactersData";
 
@@ -23,6 +23,7 @@ function App() {
   const [showIdleVideo, setShowIdleVideo] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const mobileStripRef = useRef(null);
 
   const selectedCharacter = useMemo(
     () =>
@@ -42,6 +43,24 @@ function App() {
     setShowIdleVideo(false);
     setVideoFailed(false);
   }, [selectedId]);
+
+  const navigateMobile = (step) => {
+    if (!matchingCharacters.length) return;
+    const index = matchingCharacters.findIndex((char) => char.id === selectedId);
+    const nextIndex =
+      index === -1
+        ? (step > 0 ? 0 : matchingCharacters.length - 1)
+        : (index + step + matchingCharacters.length) % matchingCharacters.length;
+    setSelectedId(matchingCharacters[nextIndex].id);
+  };
+
+  useEffect(() => {
+    const strip = mobileStripRef.current;
+    const active = strip?.querySelector(`[data-char-id="${selectedId}"]`);
+    if (!active) return;
+    const center = active.offsetLeft - (strip.clientWidth - active.clientWidth) / 2;
+    strip.scrollTo({ left: Math.max(0, center), behavior: "smooth" });
+  }, [selectedId, matchingCharacters]);
 
   const handleScroll = (e) => {
     if (window.matchMedia("(max-width: 1100px)").matches) return;
@@ -74,25 +93,53 @@ function App() {
         {/* Trilhos curvos no fundo */}
         <div className="arc-tracks-bg" />
 
-        {/* No celular e tablet, a roleta vira uma faixa horizontal com swipe. */}
-        <div className="mobile-character-strip" aria-label="Personagens disponíveis">
-          {matchingCharacters.length ? (
-            matchingCharacters.map((char) => (
-              <button
-                key={char.id}
-                type="button"
-                className={`char-slot ${selectedId === char.id ? "active" : ""}`}
-                onClick={() => setSelectedId(char.id)}
-                aria-label={`Selecionar personagem ${char.name}`}
-                aria-pressed={selectedId === char.id}
-              >
-                <img src={char.avatar} alt="" className="char-avatar-img" loading="lazy" />
-                <span className="char-number">{char.id + 1}</span>
-              </button>
-            ))
-          ) : (
-            <p className="mobile-empty-state">Nenhum personagem encontrado.</p>
-          )}
+        {/* Barra circular de personagens: visível no celular e tablet. */}
+        <div className="mobile-selector">
+          <button
+            type="button"
+            className="mobile-nav-arrow"
+            aria-label="Personagem anterior"
+            onClick={() => navigateMobile(-1)}
+            disabled={!matchingCharacters.length}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m14.5 5-7 7 7 7" />
+            </svg>
+          </button>
+          <div
+            className="mobile-character-strip"
+            ref={mobileStripRef}
+            aria-label="Escolher personagem, deslizando para os lados"
+          >
+            {matchingCharacters.length ? (
+              matchingCharacters.map((char) => (
+                <button
+                  key={char.id}
+                  data-char-id={char.id}
+                  type="button"
+                  className={`char-slot ${selectedId === char.id ? "active" : ""}`}
+                  onClick={() => setSelectedId(char.id)}
+                  aria-label={`Selecionar personagem ${char.name}`}
+                  aria-pressed={selectedId === char.id}
+                >
+                  <img src={char.avatar} alt="" className="char-avatar-img" loading="lazy" />
+                </button>
+              ))
+            ) : (
+              <p className="mobile-empty-state">Nenhum personagem encontrado.</p>
+            )}
+          </div>
+          <button
+            type="button"
+            className="mobile-nav-arrow"
+            aria-label="Próximo personagem"
+            onClick={() => navigateMobile(1)}
+            disabled={!matchingCharacters.length}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m9.5 5 7 7-7 7" />
+            </svg>
+          </button>
         </div>
 
         <div className="arch-container">
