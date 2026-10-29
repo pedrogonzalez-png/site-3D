@@ -21,6 +21,7 @@ function App() {
   const [selectedId, setSelectedId] = useState(0);
   const [rows, setRows] = useState(initialRows);
   const [showIdleVideo, setShowIdleVideo] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   const selectedCharacter = useMemo(
@@ -30,12 +31,20 @@ function App() {
     [selectedId],
   );
   const currentColor = selectedCharacter.color || "#FFCC00";
+  const matchingCharacters = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase();
+    return ALL_CHARACTERS.filter((char) =>
+      char.name.toLowerCase().includes(query),
+    );
+  }, [searchTerm]);
 
   useEffect(() => {
     setShowIdleVideo(false);
+    setVideoFailed(false);
   }, [selectedId]);
 
   const handleScroll = (e) => {
+    if (window.matchMedia("(max-width: 1100px)").matches) return;
     const isScrollingDown = e.deltaY > 0;
     setRows((prevRows) => {
       const newRows = [...prevRows];
@@ -46,13 +55,6 @@ function App() {
       }
       return newRows;
     });
-  };
-
-  const handleKeyDown = (e, id) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      setSelectedId(id);
-    }
   };
 
   // Geometria do Arco (Marvel Rivals)
@@ -72,6 +74,27 @@ function App() {
         {/* Trilhos curvos no fundo */}
         <div className="arc-tracks-bg" />
 
+        {/* No celular e tablet, a roleta vira uma faixa horizontal com swipe. */}
+        <div className="mobile-character-strip" aria-label="Personagens disponíveis">
+          {matchingCharacters.length ? (
+            matchingCharacters.map((char) => (
+              <button
+                key={char.id}
+                type="button"
+                className={`char-slot ${selectedId === char.id ? "active" : ""}`}
+                onClick={() => setSelectedId(char.id)}
+                aria-label={`Selecionar personagem ${char.name}`}
+                aria-pressed={selectedId === char.id}
+              >
+                <img src={char.avatar} alt="" className="char-avatar-img" loading="lazy" />
+                <span className="char-number">{char.id + 1}</span>
+              </button>
+            ))
+          ) : (
+            <p className="mobile-empty-state">Nenhum personagem encontrado.</p>
+          )}
+        </div>
+
         <div className="arch-container">
           {rows.slice(0, VISIBLE_COUNT).map((row, index) => {
             const angleDeg = START_ANGLE + index * STEP_ANGLE;
@@ -89,13 +112,11 @@ function App() {
                     searchTerm === "" ||
                     char.name.toLowerCase().includes(searchTerm.toLowerCase());
                   return (
-                    <div
+                    <button
                       key={char.id}
-                      role="button"
-                      tabIndex={0}
+                      type="button"
                       className={`char-slot ${selectedId === char.id ? "active" : ""} ${!isMatch ? "dimmed" : ""}`}
                       onClick={() => setSelectedId(char.id)}
-                      onKeyDown={(e) => handleKeyDown(e, char.id)}
                       aria-label={`Selecionar personagem ${char.name}`}
                       aria-pressed={selectedId === char.id}
                     >
@@ -103,9 +124,10 @@ function App() {
                         src={char.avatar}
                         alt={char.name}
                         className="char-avatar-img"
+                        loading="lazy"
                       />
                       <span className="char-number">{char.id + 1}</span>
-                    </div>
+                    </button>
                   );
                 })}
               </div>
@@ -123,6 +145,7 @@ function App() {
         <div className="search-container">
           <input
             type="search"
+            aria-label="Pesquisar personagem"
             className="search-input"
             placeholder="PESQUISAR..."
             value={searchTerm}
@@ -137,10 +160,19 @@ function App() {
         </div>
 
         <div className="character-render-container">
-          {!showIdleVideo ? (
+          {videoFailed ? (
+            <img
+              src={selectedCharacter.avatar}
+              alt={selectedCharacter.name}
+              className="character-fallback"
+            />
+          ) : !showIdleVideo ? (
             <video
               key={`intro-${selectedCharacter?.id}`}
               src={selectedCharacter?.videoIntro}
+              poster={selectedCharacter.avatar}
+              preload="metadata"
+              onError={() => setShowIdleVideo(true)}
               autoPlay
               muted
               playsInline
@@ -151,6 +183,9 @@ function App() {
             <video
               key={`idle-${selectedCharacter?.id}`}
               src={selectedCharacter?.videoIdle}
+              poster={selectedCharacter.avatar}
+              preload="metadata"
+              onError={() => setVideoFailed(true)}
               autoPlay
               loop
               muted
