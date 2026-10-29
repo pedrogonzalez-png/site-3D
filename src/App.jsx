@@ -56,14 +56,27 @@ function App() {
 
   useEffect(() => {
     const strip = mobileStripRef.current;
-    const active = strip?.querySelector(`[data-char-id="${selectedId}"]`);
-    if (!active) return;
-    const center = active.offsetLeft - (strip.clientWidth - active.clientWidth) / 2;
-    strip.scrollTo({ left: Math.max(0, center), behavior: "smooth" });
+    if (!strip) return;
+
+    const centerActive = () => {
+      if (window.matchMedia("(min-width: 1281px)").matches) return;
+      const active = strip.querySelector(`[data-char-id="${selectedId}"]`);
+      if (!active) return;
+      const center = active.offsetLeft - (strip.clientWidth - active.clientWidth) / 2;
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      strip.scrollTo({
+        left: Math.max(0, center),
+        behavior: reducedMotion ? "auto" : "smooth",
+      });
+    };
+
+    centerActive();
+    window.addEventListener("resize", centerActive);
+    return () => window.removeEventListener("resize", centerActive);
   }, [selectedId, matchingCharacters]);
 
   const handleScroll = (e) => {
-    if (window.matchMedia("(max-width: 1100px)").matches) return;
+    if (window.matchMedia("(max-width: 1280px)").matches) return;
     const isScrollingDown = e.deltaY > 0;
     setRows((prevRows) => {
       const newRows = [...prevRows];
@@ -100,7 +113,7 @@ function App() {
             className="mobile-nav-arrow"
             aria-label="Personagem anterior"
             onClick={() => navigateMobile(-1)}
-            disabled={!matchingCharacters.length}
+            disabled={matchingCharacters.length < 2}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="m14.5 5-7 7 7 7" />
